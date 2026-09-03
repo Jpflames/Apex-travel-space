@@ -35,9 +35,9 @@ export default function Home() {
                 We guide students and travelers every step of the way – from choosing the right program to obtaining your visa and preparing for your language test.
               </p>
             </FadeInUp>
-            <FadeInUp delay={0.3} className="flex flex-col sm:flex-row gap-4">
-              <GoldButton href="/services">Explore Services <ArrowRight size={18} /></GoldButton>
-              <ScaleHover>
+            <FadeInUp delay={0.3} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <GoldButton href="/services" className="w-full sm:w-auto">Explore Services <ArrowRight size={18} /></GoldButton>
+              <ScaleHover className="w-full sm:w-auto">
                 <Link href="/consultation" className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-white/20 px-6 text-sm font-bold text-white hover:bg-white/10 transition-colors">
                   Book a Consultation
                 </Link>

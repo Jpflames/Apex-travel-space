@@ -88,12 +88,12 @@ export function ApexLogo({ light = true }: { light?: boolean }) {
   );
 }
 
-export function GoldButton({ href, children, dark = false }: { href: string; children: ReactNode; dark?: boolean }) {
+export function GoldButton({ href, children, dark = false, className = "" }: { href: string; children: ReactNode; dark?: boolean; className?: string }) {
   return (
-    <ScaleHover>
+    <ScaleHover className={className}>
       <Link
         href={href}
-        className={`inline-flex h-12 items-center justify-center gap-2 rounded-[6px] px-6 text-sm font-extrabold shadow-sm transition ${
+        className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-[6px] px-6 text-sm font-extrabold shadow-sm transition ${
           dark ? "bg-[#061733] text-white hover:bg-[#0b2550]" : "bg-[#e6ac24] text-[#061733] hover:bg-[#f0bb39]"
         }`}
       >

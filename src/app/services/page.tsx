@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, GraduationCap, FileText, ChevronRight } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
 import Image from "next/image";
+import { FadeInUp, StaggerContainer, StaggerItem, ScaleHover } from "@/components/ui/motion";
 
 export default function ServicesPage() {
   const servicesList = [
@@ -37,22 +38,26 @@ export default function ServicesPage() {
       </section>
 
       <section className="px-6 -mt-8">
-        <div className="mx-auto max-w-3xl flex flex-col gap-4">
+        <StaggerContainer className="mx-auto max-w-3xl flex flex-col gap-4">
           {servicesList.map((service, i) => (
-            <Link key={i} href={service.href} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow group">
-              <span className="w-14 h-14 shrink-0 rounded-full bg-brand-midnight text-brand-gold flex items-center justify-center border-4 border-brand-midnight/5">
-                <service.icon size={24} />
-              </span>
-              <div className="flex-1">
-                <h2 className="text-lg font-black text-brand-midnight">{service.title}</h2>
-                <p className="text-sm text-gray-600 mt-1 mb-3 leading-relaxed">{service.text}</p>
-                <span className="text-sm font-bold text-brand-midnight flex items-center gap-1 group-hover:text-brand-gold transition-colors">
-                  Learn More <ArrowRight size={16} />
-                </span>
-              </div>
-            </Link>
+            <StaggerItem key={i}>
+              <ScaleHover className="w-full">
+                <Link href={service.href} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow group">
+                  <span className="w-14 h-14 shrink-0 rounded-full bg-brand-midnight text-brand-gold flex items-center justify-center border-4 border-brand-midnight/5">
+                    <service.icon size={24} />
+                  </span>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-black text-brand-midnight">{service.title}</h2>
+                    <p className="text-sm text-gray-600 mt-1 mb-3 leading-relaxed">{service.text}</p>
+                    <span className="text-sm font-bold text-brand-midnight flex items-center gap-1 group-hover:text-brand-gold transition-colors">
+                      Learn More <ArrowRight size={16} />
+                    </span>
+                  </div>
+                </Link>
+              </ScaleHover>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       <section className="mx-auto max-w-3xl px-6 mt-12">
