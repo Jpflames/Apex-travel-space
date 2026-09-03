@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { ScaleHover, StaggerContainer, StaggerItem, FadeInUp } from "@/components/ui/motion";
 import type { ElementType, ReactNode } from "react";
 import {
   ArrowRight,
@@ -86,14 +90,16 @@ export function ApexLogo({ light = true }: { light?: boolean }) {
 
 export function GoldButton({ href, children, dark = false }: { href: string; children: ReactNode; dark?: boolean }) {
   return (
-    <Link
-      href={href}
-      className={`inline-flex h-12 items-center justify-center gap-2 rounded-[6px] px-6 text-sm font-extrabold shadow-sm transition ${
-        dark ? "bg-[#061733] text-white hover:bg-[#0b2550]" : "bg-[#e6ac24] text-[#061733] hover:bg-[#f0bb39]"
-      }`}
-    >
-      {children}
-    </Link>
+    <ScaleHover>
+      <Link
+        href={href}
+        className={`inline-flex h-12 items-center justify-center gap-2 rounded-[6px] px-6 text-sm font-extrabold shadow-sm transition ${
+          dark ? "bg-[#061733] text-white hover:bg-[#0b2550]" : "bg-[#e6ac24] text-[#061733] hover:bg-[#f0bb39]"
+        }`}
+      >
+        {children}
+      </Link>
+    </ScaleHover>
   );
 }
 
@@ -146,19 +152,19 @@ export function IconBubble({ icon: Icon, color = "bg-[#061733]", size = "md" }: 
 export function WhyChooseBand() {
   return (
     <section className="bg-[#06336f] bg-[radial-gradient(circle_at_top_right,rgba(39,123,191,0.35),transparent_35%)] py-8 text-white">
-      <div className="mx-auto max-w-7xl px-6 text-center">
+      <FadeInUp className="mx-auto max-w-7xl px-6 text-center">
         <p className="text-[0.7rem] font-black uppercase text-[#e6ac24]">Why Choose Apex?</p>
         <h2 className="mb-7 text-2xl font-black">Your Success Is Our Priority</h2>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+        <StaggerContainer className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
           {reasons.map((item) => (
-            <div key={item.title} className="border-white/15 px-3 lg:border-l">
+            <StaggerItem key={item.title} className="border-white/15 px-3 lg:border-l">
               <IconBubble icon={item.icon} size="sm" />
               <h3 className="mt-3 text-sm font-extrabold">{item.title}</h3>
               <p className="mx-auto mt-1 max-w-[11rem] text-[0.72rem] leading-relaxed text-white/75">{item.text}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
-      </div>
+        </StaggerContainer>
+      </FadeInUp>
     </section>
   );
 }
@@ -190,14 +196,15 @@ export function ServiceTabs({ active }: { active: string }) {
   return (
     <div className="mx-auto -mt-12 grid max-w-6xl grid-cols-1 overflow-hidden rounded-[8px] bg-white shadow-[0_14px_35px_rgba(4,23,54,0.14)] md:grid-cols-3">
       {services.map((service) => (
-        <Link
-          key={service.title}
-          href={service.href}
-          className={`flex items-center gap-5 border-b px-8 py-5 md:border-b-0 md:border-r ${active === service.title ? "border-b-4 border-[#e6ac24]" : "border-slate-200"}`}
-        >
-          <IconBubble icon={service.icon} color={service.color} />
-          <span className="text-base font-black leading-tight text-[#061733]">{service.title}</span>
-        </Link>
+        <ScaleHover key={service.title}>
+          <Link
+            href={service.href}
+            className={`flex h-full items-center gap-5 border-b px-8 py-5 md:border-b-0 md:border-r ${active === service.title ? "border-b-4 border-[#e6ac24]" : "border-slate-200"}`}
+          >
+            <IconBubble icon={service.icon} color={service.color} />
+            <span className="text-base font-black leading-tight text-[#061733]">{service.title}</span>
+          </Link>
+        </ScaleHover>
       ))}
     </div>
   );
@@ -259,22 +266,30 @@ export function MiniStats() {
   ];
 
   return (
-    <div className="grid gap-4 text-white sm:grid-cols-2 lg:grid-cols-4">
+    <StaggerContainer className="grid gap-4 text-white sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((item) => (
-        <div key={item.label} className="flex items-center gap-3 border-white/15 lg:border-r">
+        <StaggerItem key={item.label} className="flex items-center gap-3 border-white/15 lg:border-r">
           <IconBubble icon={item.icon} size="sm" />
           <span>
             <strong className="block text-xl font-black">{item.num}</strong>
             <span className="text-[0.7rem] font-semibold text-white/75">{item.label}</span>
           </span>
-        </div>
+        </StaggerItem>
       ))}
-    </div>
+    </StaggerContainer>
   );
 }
 
 export function FlightMark() {
-  return <Plane className="absolute text-[#e6ac24]/90" size={24} />;
+  return (
+    <motion.div
+      animate={{ y: [0, -10, 0] }}
+      transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+      className="absolute"
+    >
+      <Plane className="text-[#e6ac24]/90" size={24} />
+    </motion.div>
+  );
 }
 
 export { ArrowRight, Award, BookOpen, Building2, Calendar, CheckCircle2, Clock, Download, FileText, Globe2, GraduationCap, Headphones, Mail, MapPin, MessageCircle, Phone, Plane, Search, ShieldCheck, Target, Users };

@@ -6,6 +6,8 @@ import { Calendar, ChevronDown, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ApexLogo, navItems } from "@/components/apex/ApexComponents";
+import { motion } from "framer-motion";
+import { ScaleHover } from "@/components/ui/motion";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -28,16 +30,24 @@ export function Navbar() {
                   {item.label}
                   {item.label === "Services" && <ChevronDown size={13} />}
                 </span>
-                {active && <span className="absolute bottom-4 left-0 h-0.5 w-full bg-brand-gold" />}
+                {active && (
+                  <motion.span
+                    layoutId="navbar-active"
+                    className="absolute bottom-4 left-0 h-0.5 w-full bg-brand-gold"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
               </Link>
             );
           })}
         </nav>
         
         <div className="hidden lg:block">
-          <Link href="/consultation" className="inline-flex h-10 items-center gap-2 rounded-full border-2 border-brand-gold px-5 text-sm font-bold text-brand-gold hover:bg-brand-gold hover:text-brand-midnight transition-colors">
-            Book a Consultation
-          </Link>
+          <ScaleHover>
+            <Link href="/consultation" className="inline-flex h-10 items-center gap-2 rounded-full border-2 border-brand-gold px-5 text-sm font-bold text-brand-gold hover:bg-brand-gold hover:text-brand-midnight transition-colors">
+              Book a Consultation
+            </Link>
+          </ScaleHover>
         </div>
 
         <Sheet>
