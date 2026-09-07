@@ -64,7 +64,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-brand-midnight text-sm">Our Office</h4>
-                    <p className="text-gray-600 text-sm mt-1">Lekki Phase 1,<br />Lagos, Nigeria</p>
+                    <p className="text-gray-600 text-sm mt-1">Abuja, Nigeria</p>
                   </div>
                 </div>
 
@@ -74,7 +74,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-brand-midnight text-sm">Phone</h4>
-                    <p className="text-gray-600 text-sm mt-1">+234 810 123 4567</p>
+                    <p className="text-gray-600 text-sm mt-1">+234 806 284 1276</p>
                   </div>
                 </div>
 
@@ -84,7 +84,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-brand-midnight text-sm">Email</h4>
-                    <p className="text-gray-600 text-sm mt-1">contact@apexgetaways.com</p>
+                    <p className="text-gray-600 text-sm mt-1">apexgetaways.travel@gmail.com</p>
                   </div>
                 </div>
               </div>

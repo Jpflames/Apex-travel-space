@@ -32,7 +32,7 @@ export default function Home() {
             </FadeInUp>
             <FadeInUp delay={0.2}>
               <p className="text-white/80 text-lg mb-8 max-w-md">
-                We guide students and travelers every step of the way – from choosing the right program to obtaining your visa and preparing for your language test.
+                We guide students and travelers every step of the way from choosing the right program to obtaining your visa and preparing for your language test.
               </p>
             </FadeInUp>
             <FadeInUp delay={0.3} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">

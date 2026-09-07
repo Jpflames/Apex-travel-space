@@ -41,6 +41,13 @@ export const navItems = [
 
 export const services = [
   {
+    title: "Student Loan",
+    text: "Comprehensive financial guidance and loan application support tailored for international students.",
+    href: "/services/student-loan",
+    icon: Building2,
+    color: "bg-[#e6ac24]",
+  },
+  {
     title: "Study Abroad & Admissions",
     text: "Helping you find the right program, institution and pathway to study internationally.",
     href: "/services/study-abroad",
@@ -182,8 +189,8 @@ export function BottomCta({ title = "Your Dream Journey Starts Here.", text = "L
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <GoldButton href="/consultation"><Calendar size={16} /> Book a Consultation</GoldButton>
-            <a href="tel:+2348101234567" className="inline-flex h-12 items-center gap-2 text-sm font-bold text-white">
-              <Phone size={17} className="text-[#e6ac24]" /> +234 810 123 4567
+            <a href="tel:+2348062841276" className="inline-flex h-12 items-center gap-2 text-sm font-bold text-white">
+              <Phone size={17} className="text-[#e6ac24]" /> +234 806 284 1276
             </a>
           </div>
         </div>
@@ -194,7 +201,7 @@ export function BottomCta({ title = "Your Dream Journey Starts Here.", text = "L
 
 export function ServiceTabs({ active }: { active: string }) {
   return (
-    <div className="mx-auto -mt-12 grid max-w-6xl grid-cols-1 overflow-hidden rounded-[8px] bg-white shadow-[0_14px_35px_rgba(4,23,54,0.14)] md:grid-cols-3">
+    <div className="mx-auto -mt-12 grid max-w-6xl grid-cols-1 overflow-hidden rounded-[8px] bg-white shadow-[0_14px_35px_rgba(4,23,54,0.14)] md:grid-cols-2 lg:grid-cols-4">
       {services.map((service) => (
         <ScaleHover key={service.title}>
           <Link
@@ -250,10 +257,10 @@ export function DownloadsPanel() {
 }
 
 export const contactInfo = [
-  { title: "Call Us", text: "+234 810 123 4567", sub: "Mon - Fri (9:00 AM - 4:00 PM WAT)", icon: Phone },
-  { title: "WhatsApp", text: "+234 810 123 4567", sub: "Quick chat with our team", icon: MessageCircle },
-  { title: "Email Us", text: "info@apexgetaways.com", sub: "We respond within 24 hours", icon: Mail },
-  { title: "Office Address", text: "Apex Getaways & Travels Limited", sub: "12 Freedom Way, Lekki Phase 1, Lagos, Nigeria.", icon: MapPin },
+  { title: "Call Us", text: "+234 806 284 1276", sub: "Mon - Fri (9:00 AM - 4:00 PM WAT)", icon: Phone },
+  { title: "WhatsApp", text: "+234 806 284 1276", sub: "Quick chat with our team", icon: MessageCircle },
+  { title: "Email Us", text: "apexgetaways.travel@gmail.com", sub: "We respond within 24 hours", icon: Mail },
+  { title: "Office Address", text: "Apex Getaways & Travels Limited", sub: "Abuja, Nigeria", icon: MapPin },
   { title: "Website", text: "www.apexgetaways.com", sub: "", icon: Globe2 },
 ];
 

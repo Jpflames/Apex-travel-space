@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, GraduationCap, FileText, ChevronRight } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, FileText, ChevronRight, Building2 } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
 import Image from "next/image";
 import { FadeInUp, StaggerContainer, StaggerItem, ScaleHover } from "@/components/ui/motion";
@@ -7,22 +7,32 @@ import { FadeInUp, StaggerContainer, StaggerItem, ScaleHover } from "@/component
 export default function ServicesPage() {
   const servicesList = [
     {
+      title: "Student Loans (Our Specialty)",
+      text: "Comprehensive financial guidance and loan application support tailored for international students. We are experts in securing funding for your education.",
+      href: "/services/student-loan",
+      icon: Building2,
+      specialty: true,
+    },
+    {
       title: "Study Abroad & Admissions",
       text: "Helping you find the right program, institution and pathway to study internationally.",
       href: "/services/study-abroad",
       icon: GraduationCap,
+      specialty: false,
     },
     {
       title: "Visa Assistance",
       text: "Guidance for student, tourist, visitor and other international visa applications.",
       href: "/services/visa-assistance",
       icon: FileText,
+      specialty: false,
     },
     {
       title: "IELTS & CELPIP Support",
       text: "Practical preparation, tips and strategies to help you achieve your required score.",
       href: "/services/ielts-celpip",
       icon: BookOpen,
+      specialty: false,
     },
   ];
 
@@ -42,12 +52,17 @@ export default function ServicesPage() {
           {servicesList.map((service, i) => (
             <StaggerItem key={i}>
               <ScaleHover className="w-full">
-                <Link href={service.href} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow group">
-                  <span className="w-14 h-14 shrink-0 rounded-full bg-brand-midnight text-brand-gold flex items-center justify-center border-4 border-brand-midnight/5">
+                <Link href={service.href} className={`bg-white p-6 rounded-2xl shadow-sm border flex items-start gap-4 hover:shadow-md transition-shadow group relative overflow-hidden ${service.specialty ? 'border-brand-gold ring-1 ring-brand-gold' : 'border-gray-100'}`}>
+                  {service.specialty && (
+                    <div className="absolute top-0 right-0 bg-brand-gold text-brand-midnight text-[0.65rem] font-black uppercase tracking-wider py-1 px-3 rounded-bl-xl z-10 shadow-sm">
+                      Our Specialty
+                    </div>
+                  )}
+                  <span className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center border-4 ${service.specialty ? 'bg-brand-gold text-brand-midnight border-brand-gold/20' : 'bg-brand-midnight text-brand-gold border-brand-midnight/5'}`}>
                     <service.icon size={24} />
                   </span>
                   <div className="flex-1">
-                    <h2 className="text-lg font-black text-brand-midnight">{service.title}</h2>
+                    <h2 className="text-lg font-black text-brand-midnight pr-16">{service.title.replace(' (Our Specialty)', '')}</h2>
                     <p className="text-sm text-gray-600 mt-1 mb-3 leading-relaxed">{service.text}</p>
                     <span className="text-sm font-bold text-brand-midnight flex items-center gap-1 group-hover:text-brand-gold transition-colors">
                       Learn More <ArrowRight size={16} />
