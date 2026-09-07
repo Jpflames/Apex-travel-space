@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search, ChevronRight, FileText, ArrowRight } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
+import { articlesData } from "@/data/articles";
 
 export const metadata = {
   title: "Resources | APEX Getaways",
@@ -9,13 +10,6 @@ export const metadata = {
 };
 
 const categories = ["All", "Study Abroad", "Visa Guides", "IELTS Tips", "Scholarships"];
-
-const articles = [
-  { title: "Top 7 Things to Consider Before Choosing a University Abroad", category: "Study Abroad", date: "May 10, 2024", read: "6 min read" },
-  { title: "Student Visa Checklist: Documents You Need to Prepare", category: "Visa Guides", date: "May 6, 2024", read: "5 min read" },
-  { title: "How to Improve Your IELTS Speaking Score", category: "IELTS Tips", date: "Apr 28, 2024", read: "7 min read" },
-  { title: "A Guide to Post-Graduation Work Permits in Canada", category: "Visa Guides", date: "Apr 20, 2024", read: "8 min read" },
-];
 
 export default function ResourcesPage() {
   return (
@@ -64,22 +58,22 @@ export default function ResourcesPage() {
 
           {/* Articles Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
-            {articles.map((article, i) => (
-              <div key={i} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-shadow">
+            {articlesData.map((article, i) => (
+              <Link href={`/resources/${article.slug}`} key={i} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-shadow group">
                 <div className="relative w-full sm:w-32 h-48 sm:h-auto rounded-2xl overflow-hidden shrink-0 bg-gray-100">
-                  <Image src={i % 2 === 0 ? "/images/office_reception_1787784558100.jpg" : "/images/services_passport_1787784622559.jpg"} alt="" fill className="object-cover" />
+                  <Image src={article.image} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="flex flex-col flex-1">
                   <span className="text-brand-gold font-bold text-xs uppercase tracking-wider mb-2">{article.category}</span>
-                  <h3 className="text-lg font-black text-brand-midnight leading-tight mb-3 hover:text-brand-ocean cursor-pointer transition-colors">
+                  <h3 className="text-lg font-black text-brand-midnight leading-tight mb-3 group-hover:text-brand-ocean transition-colors">
                     {article.title}
                   </h3>
                   <div className="mt-auto flex items-center justify-between text-xs text-gray-500 font-medium">
                     <span>{article.date}</span>
-                    <span>{article.read}</span>
+                    <span>{article.readTime}</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
