@@ -258,7 +258,7 @@ export function DownloadsPanel() {
 
 export const contactInfo = [
   { title: "Call Us", text: "+234 806 284 1276", sub: "Mon - Fri (9:00 AM - 4:00 PM WAT)", icon: Phone },
-  { title: "WhatsApp", text: "+234 806 284 1276", sub: "Quick chat with our team", icon: MessageCircle },
+  { title: "WhatsApp", text: "+234 907 285 5744", sub: "Quick chat with our team", icon: MessageCircle },
   { title: "Email Us", text: "apexgetaways.travel@gmail.com", sub: "We respond within 24 hours", icon: Mail },
   { title: "Office Address", text: "Apex Getaways & Travels Limited", sub: "Abuja, Nigeria", icon: MapPin },
   { title: "Website", text: "www.apexgetaways.com", sub: "", icon: Globe2 },

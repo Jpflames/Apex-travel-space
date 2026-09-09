@@ -23,6 +23,16 @@ const countries = [
     name: "Australia", 
     image: "/australia_flag_1788441381530.jpg",
     text: "Excellent education system and a high standard of living." 
+  },
+  { 
+    name: "Germany", 
+    image: "/images/hero_bg_map_1787784538258.jpg",
+    text: "World-class public universities with zero or low tuition fees, and a strong economy." 
+  },
+  { 
+    name: "France", 
+    image: "/images/countries_landmarks_1787784665565.jpg",
+    text: "Rich cultural history, excellent culinary arts, and globally recognized universities." 
   }
 ];
 

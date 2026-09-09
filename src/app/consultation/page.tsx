@@ -69,10 +69,10 @@ export default function ConsultationPage() {
     setStep(step - 1);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const whatsappNumber = "2348101234567"; // Replace with actual number
+    const whatsappNumber = "2349072855744"; // Official WhatsApp number
     const message = `Hello APEX Getaways, I would like to book a consultation.
     
 *Service:* ${selectedService}
@@ -86,6 +86,31 @@ export default function ConsultationPage() {
 *Message:* ${formData.message}`;
 
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    
+    // Send email using FormSubmit AJAX
+    try {
+      await fetch("https://formsubmit.co/ajax/apexgetaways.travel@gmail.com", {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            _subject: "New Consultation Booking",
+            Service: selectedService,
+            Date: selectedDate,
+            Time: selectedTime,
+            Name: `${formData.firstName} ${formData.lastName}`,
+            Email: formData.email,
+            Phone: formData.phone,
+            Message: formData.message
+        })
+      });
+    } catch(error) {
+       console.error("Failed to send email", error);
+    }
+
+    // Redirect to WhatsApp
     window.open(whatsappUrl, '_blank');
   };
 

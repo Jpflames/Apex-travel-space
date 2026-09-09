@@ -4,8 +4,9 @@ import { Calendar, Clock, User, ArrowLeft, Share2 } from "lucide-react";
 import { articlesData } from "@/data/articles";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const article = articlesData.find(a => a.slug === params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = articlesData.find(a => a.slug === slug);
   if (!article) return { title: "Article Not Found | APEX Getaways" };
   return {
     title: `${article.title} | APEX Getaways`,
@@ -13,8 +14,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = articlesData.find(a => a.slug === params.slug);
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = articlesData.find(a => a.slug === slug);
   
   if (!article) {
     notFound();

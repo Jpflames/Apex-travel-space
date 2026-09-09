@@ -8,8 +8,9 @@ export const metadata = {
 };
 
 // Mock data (Normally fetched from Firebase based on params.slug)
-export default function CountryDetailPage({ params }: { params: { slug: string } }) {
-  const countryName = params.slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+export default async function CountryDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const countryName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
   return (
     <div className="flex flex-col flex-1 bg-white">
