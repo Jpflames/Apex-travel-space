@@ -83,12 +83,12 @@ export function ApexLogo({ light = true }: { light?: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-3">
       <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-sm">
-        <Image src="/apex-logo-transparent.png" alt="APEX" fill className="object-contain" priority />
+        <Image src="/apex-logo-new.jpg" alt="APEX" fill className="object-contain" priority />
       </span>
       <span className="leading-none">
         <span className={`block text-[2rem] font-black tracking-[0.08em] ${light ? "text-white" : "text-[#061733]"}`}>APEX</span>
         <span className={`block text-[0.6rem] font-extrabold tracking-[0.12em] ${light ? "text-white" : "text-[#061733]"}`}>
-          GETAWAYS & TRAVEL LTD
+          GETAWAY & SERVICES
         </span>
       </span>
     </Link>
@@ -189,8 +189,8 @@ export function BottomCta({ title = "Your Dream Journey Starts Here.", text = "L
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <GoldButton href="/consultation"><Calendar size={16} /> Book a Consultation</GoldButton>
-            <a href="tel:+2348062841276" className="inline-flex h-12 items-center gap-2 text-sm font-bold text-white">
-              <Phone size={17} className="text-[#e6ac24]" /> +234 806 284 1276
+            <a href="tel:+2349072855744" className="inline-flex h-12 items-center gap-2 text-sm font-bold text-white">
+              <Phone size={17} className="text-[#e6ac24]" /> +234 907 285 5744
             </a>
           </div>
         </div>
@@ -257,10 +257,10 @@ export function DownloadsPanel() {
 }
 
 export const contactInfo = [
-  { title: "Call Us", text: "+234 806 284 1276", sub: "Mon - Fri (9:00 AM - 4:00 PM WAT)", icon: Phone },
+  { title: "Call Us", text: "+234 907 285 5744", sub: "Mon - Fri (9:00 AM - 4:00 PM WAT)", icon: Phone },
   { title: "WhatsApp", text: "+234 907 285 5744", sub: "Quick chat with our team", icon: MessageCircle },
   { title: "Email Us", text: "apexgetaways.travel@gmail.com", sub: "We respond within 24 hours", icon: Mail },
-  { title: "Office Address", text: "Apex Getaways & Travels Limited", sub: "Abuja, Nigeria", icon: MapPin },
+  { title: "Office Address", text: "APEX Getaway & Services", sub: "Abuja, Nigeria", icon: MapPin },
   { title: "Website", text: "www.apexgetaways.com", sub: "", icon: Globe2 },
 ];
 

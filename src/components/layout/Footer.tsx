@@ -6,9 +6,9 @@ export function Footer() {
     <footer className="bg-brand-midnight py-4 text-white/78 border-t border-white/5">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 text-xs font-semibold md:flex-row">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
-          <a href="tel:+2348062841276" className="inline-flex items-center gap-2 hover:text-white">
+          <a href="tel:+2349072855744" className="inline-flex items-center gap-2 hover:text-white">
             <span className="grid h-7 w-7 place-items-center rounded-full border border-white/20"><Phone size={14} /></span>
-            +234 806 284 1276
+            +234 907 285 5744
           </a>
           <a href="mailto:apexgetaways.travel@gmail.com" className="inline-flex items-center gap-2 hover:text-white">
             <span className="grid h-7 w-7 place-items-center rounded-full border border-white/20"><Mail size={14} /></span>

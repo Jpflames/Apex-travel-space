@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Admin Dashboard | APEX Getaways",
+  title: "Admin Dashboard | APEX Getaway & Services",
 };
 
 export default function AdminOverviewPage() {

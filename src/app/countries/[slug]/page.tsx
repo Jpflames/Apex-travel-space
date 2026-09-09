@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { GraduationCap, MapPin, Building2, CreditCard, Home, FileText, ChevronRight } from "lucide-react";
 
 export const metadata = {
-  title: "Country Details | APEX Getaways",
+  title: "Country Details | APEX Getaway & Services",
   description: "Detailed information for international students.",
 };
 

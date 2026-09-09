@@ -4,7 +4,7 @@ import { CheckCircle2, ChevronRight, Calendar, MessageSquare, Edit3, BookOpen, H
 import { GoldButton } from "@/components/apex/ApexComponents";
 
 export const metadata = {
-  title: "IELTS & CELPIP Support | APEX Getaways",
+  title: "IELTS & CELPIP Support | APEX Getaway & Services",
   description: "Practical preparation, tips and strategies for IELTS and CELPIP.",
 };
 

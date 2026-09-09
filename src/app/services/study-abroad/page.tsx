@@ -4,7 +4,7 @@ import { CheckCircle2, ChevronRight, Calendar } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
 
 export const metadata = {
-  title: "Study Abroad & Admissions | APEX Getaways",
+  title: "Study Abroad & Admissions | APEX Getaway & Services",
   description: "Comprehensive guidance for international school admissions.",
 };
 

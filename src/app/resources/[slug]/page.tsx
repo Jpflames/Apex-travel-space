@@ -7,9 +7,9 @@ import { notFound } from "next/navigation";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const article = articlesData.find(a => a.slug === slug);
-  if (!article) return { title: "Article Not Found | APEX Getaways" };
+  if (!article) return { title: "Article Not Found | APEX Getaway & Services" };
   return {
-    title: `${article.title} | APEX Getaways`,
+    title: `${article.title} | APEX Getaway & Services`,
     description: `Read about ${article.title} in our resources section.`,
   };
 }
@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </div>
                 <div>
                   <p className="font-bold text-brand-midnight text-sm">Editorial Team</p>
-                  <p className="text-brand-muted text-xs">APEX Getaways</p>
+                  <p className="text-brand-muted text-xs">APEX Getaway & Services</p>
                 </div>
               </div>
               <Button variant="ghost" size="icon" className="text-brand-muted hover:text-brand-ocean">

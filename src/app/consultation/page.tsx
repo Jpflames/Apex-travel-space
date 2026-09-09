@@ -73,7 +73,7 @@ export default function ConsultationPage() {
     e.preventDefault();
     
     const whatsappNumber = "2349072855744"; // Official WhatsApp number
-    const message = `Hello APEX Getaways, I would like to book a consultation.
+    const message = `Hello APEX Getaway & Services, I would like to book a consultation.
     
 *Service:* ${selectedService}
 *Date:* ${selectedDate}

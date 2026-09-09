@@ -4,7 +4,7 @@ import { CheckCircle2, ChevronRight, Calendar } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
 
 export const metadata = {
-  title: "Visa Assistance | APEX Getaways",
+  title: "Visa Assistance | APEX Getaway & Services",
   description: "Expert guidance for student, tourist, visitor, and business visa applications.",
 };
 

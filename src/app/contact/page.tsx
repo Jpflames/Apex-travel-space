@@ -3,8 +3,8 @@ import { Mail, MapPin, Phone, MessageCircle } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
 
 export const metadata = {
-  title: "Contact Us | APEX Getaways",
-  description: "Contact APEX Getaways and Travels Limited.",
+  title: "Contact Us | APEX Getaway & Services",
+  description: "Contact APEX Getaway & Services and Travels Limited.",
 };
 
 export default function ContactPage() {
@@ -73,8 +73,8 @@ export default function ContactPage() {
                     <Phone size={20} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-brand-midnight text-sm">Phone</h4>
-                    <p className="text-gray-600 text-sm mt-1">+234 806 284 1276</p>
+                    <h3 className="font-bold text-brand-midnight">Phone Number</h3>
+                    <p className="text-gray-600 text-sm mt-1">+234 907 285 5744</p>
                   </div>
                 </div>
 

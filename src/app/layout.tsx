@@ -4,7 +4,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "APEX Getaways & Travels Limited",
+  title: "APEX Getaway & Services",
   description: "Study Abroad. Get Visa Guidance. Prepare for Your Language Test.",
 };
 

@@ -29,7 +29,7 @@ function SuccessContent() {
       
       <h1 className="text-3xl md:text-4xl font-bold text-brand-midnight mb-4">Request Received</h1>
       <p className="text-brand-muted text-lg mb-8">
-        Thank you for choosing APEX Getaways. Your consultation request has been successfully submitted.
+        Thank you for choosing APEX Getaway & Services. Your consultation request has been successfully submitted.
       </p>
       
       <div className="bg-brand-soft/50 rounded-2xl border border-brand-steel/10 p-6 mb-8 text-left">

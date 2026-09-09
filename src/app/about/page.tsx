@@ -4,7 +4,7 @@ import { ArrowRight, Target, Eye, Diamond, CheckCircle2 } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
 
 export const metadata = {
-  title: "About Us | APEX Getaways & Travels Limited",
+  title: "About Us | APEX Getaway & Services",
   description: "Learn about our company story, mission, vision, and core values.",
 };
 
@@ -26,7 +26,7 @@ export default function AboutPage() {
         <div className="absolute right-0 top-0 bottom-0 w-full lg:w-1/2 opacity-50 mix-blend-luminosity">
           <Image 
             src="/Apex-CEO.jpeg" 
-            alt="CEO of APEX Getaways & Travels" 
+            alt="CEO of APEX Getaway & Services" 
             fill 
             className="object-cover object-top"
           />
@@ -47,7 +47,7 @@ export default function AboutPage() {
               </span>
             </h1>
             <p className="text-white/80 max-w-xl leading-relaxed text-lg">
-              APEX Getaways & Travels is a trusted international education and travel consultancy founded by our CEO to help students and travelers achieve their global dreams.
+              APEX Getaway & Services is a trusted international education and travel consultancy founded by our CEO to help students and travelers achieve their global dreams.
             </p>
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function AboutPage() {
           <div className="relative w-72 h-72 md:w-96 md:h-96 shrink-0 rounded-2xl overflow-hidden shadow-lg border-4 border-white">
             <Image 
               src="/Apex-CEO.jpeg" 
-              alt="CEO of APEX Getaways & Travels" 
+              alt="CEO of APEX Getaway & Services" 
               fill 
               className="object-cover object-top"
             />
@@ -114,7 +114,7 @@ export default function AboutPage() {
             <p className="text-brand-gold font-bold mb-1 uppercase tracking-wide text-xs">Our Leadership</p>
             <h2 className="text-2xl font-black text-brand-midnight mb-2">Meet the CEO</h2>
             <p className="text-gray-600 leading-relaxed text-sm mb-4">
-              With a passion for global education and seamless travel experiences, our CEO founded APEX Getaways to bridge the gap between dreams and reality. Under their leadership, the company has guided hundreds of students and professionals to success across the globe.
+              With a passion for global education and seamless travel experiences, our CEO founded APEX Getaway & Services to bridge the gap between dreams and reality. Under their leadership, the company has guided hundreds of students and professionals to success across the globe.
             </p>
             <p className="text-brand-midnight font-bold italic text-sm">
               "Your success is our priority, and we are with you every step of the way."

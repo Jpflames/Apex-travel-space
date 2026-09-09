@@ -5,7 +5,7 @@ import { GoldButton, ServiceTabs, BottomCta, Eyebrow } from "@/components/apex/A
 import { FadeInUp, StaggerContainer, StaggerItem } from "@/components/ui/motion";
 
 export const metadata = {
-  title: "Student Loans & Funding | APEX Getaways",
+  title: "Student Loans & Funding | APEX Getaway & Services",
   description: "Specialized financial guidance and student loan assistance.",
 };
 

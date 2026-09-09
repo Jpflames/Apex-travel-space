@@ -5,7 +5,7 @@ import { GoldButton } from "@/components/apex/ApexComponents";
 import { articlesData } from "@/data/articles";
 
 export const metadata = {
-  title: "Resources | APEX Getaways",
+  title: "Resources | APEX Getaway & Services",
   description: "Study abroad, visa and language-test resources.",
 };
 

@@ -4,7 +4,7 @@ import { ArrowRight, Globe2, ChevronRight, MapPin } from "lucide-react";
 import { GoldButton } from "@/components/apex/ApexComponents";
 
 export const metadata = {
-  title: "Countries & Destinations | APEX Getaways",
+  title: "Countries & Destinations | APEX Getaway & Services",
   description: "Global study and travel destinations.",
 };
 

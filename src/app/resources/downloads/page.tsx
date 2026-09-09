@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Download, FileText, Search } from "lucide-react";
 
 export const metadata = {
-  title: "Downloads | APEX Getaways",
+  title: "Downloads | APEX Getaway & Services",
   description: "Download guides, checklists, and workbooks for your international journey.",
 };
 

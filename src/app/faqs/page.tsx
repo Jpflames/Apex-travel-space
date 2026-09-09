@@ -9,7 +9,7 @@ import {
 import { HelpCircle } from "lucide-react";
 
 export const metadata = {
-  title: "FAQs | APEX Getaways",
+  title: "FAQs | APEX Getaway & Services",
   description: "Frequently asked questions about our services and international travel.",
 };
 
