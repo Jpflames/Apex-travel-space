@@ -3,19 +3,30 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Lock, Mail, ArrowRight } from "lucide-react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase/client";
+import { useRouter } from "next/navigation";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate login
-    setTimeout(() => {
-      window.location.href = "/admin";
-    }, 1000);
+    setError("");
+    
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push("/admin");
+    } catch (err: any) {
+      console.error("Login error", err);
+      setError("Invalid email or password. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,6 +46,12 @@ export default function AdminLogin() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-2xl sm:px-10 border border-gray-100">
           <form className="space-y-6" onSubmit={handleLogin}>
+            {error && (
+              <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium border border-red-100">
+                {error}
+              </div>
+            )}
+            
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
@@ -51,7 +68,7 @@ export default function AdminLogin() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-xl border-0 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-ocean sm:text-sm sm:leading-6"
+                  className="block w-full rounded-xl border border-gray-300 py-2.5 pl-10 text-gray-900 shadow-sm focus:border-brand-ocean focus:ring-1 focus:ring-brand-ocean sm:text-sm sm:leading-6 outline-none"
                 />
               </div>
             </div>
@@ -72,28 +89,8 @@ export default function AdminLogin() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-xl border-0 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-ocean sm:text-sm sm:leading-6"
+                  className="block w-full rounded-xl border border-gray-300 py-2.5 pl-10 text-gray-900 shadow-sm focus:border-brand-ocean focus:ring-1 focus:ring-brand-ocean sm:text-sm sm:leading-6 outline-none"
                 />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-brand-ocean focus:ring-brand-ocean"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-brand-ocean hover:text-brand-ocean/80">
-                  Forgot password?
-                </a>
               </div>
             </div>
 

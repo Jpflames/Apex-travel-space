@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight, Calendar, Clock, ArrowRight, User, Mail, Phone, MessageCircle, CheckCircle2 } from "lucide-react";
+import { Calendar, ArrowRight, User, Mail, Phone, CheckCircle2, UploadCloud, FileImage, Loader2 } from "lucide-react";
+import { db } from "@/lib/firebase/client";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const services = [
   "Study Abroad & Admissions",
@@ -14,10 +15,9 @@ const services = [
   "Business / Corporate"
 ];
 
-// Mock booked slots for demonstration
 const mockedBookings: Record<string, string[]> = {
   "2024-06-15": ["10:00 AM", "02:00 PM"],
-  "2024-06-16": ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"], // Fully booked
+  "2024-06-16": ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"],
 };
 
 const allTimeSlots = [
@@ -40,28 +40,26 @@ export default function ConsultationPage() {
     message: ""
   });
 
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
-    
-    // Check if fully booked
     if (mockedBookings[date] && mockedBookings[date].length === allTimeSlots.length) {
       alert("This Date has been Picked Please Pick another dates available");
       setSelectedDate("");
       setSelectedTime("");
       return;
     }
-
     setSelectedDate(date);
     setSelectedTime("");
   };
 
-  const availableSlots = selectedDate 
-    ? allTimeSlots.filter(slot => !(mockedBookings[selectedDate] || []).includes(slot))
-    : [];
-
   const handleNext = () => {
     if (step === 1 && !selectedService) return;
     if (step === 2 && (!selectedDate || !selectedTime)) return;
+    if (step === 3 && (!formData.firstName || !formData.lastName || !formData.email || !formData.phone)) return;
     setStep(step + 1);
   };
 
@@ -71,24 +69,46 @@ export default function ConsultationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const whatsappNumber = "2349072855744"; // Official WhatsApp number
-    const message = `Hello APEX Getaway & Services, I would like to book a consultation.
-    
-*Service:* ${selectedService}
-*Date:* ${selectedDate}
-*Time:* ${selectedTime}
+    if (!receiptFile) return;
 
-*Name:* ${formData.firstName} ${formData.lastName}
-*Email:* ${formData.email}
-*Phone:* ${formData.phone}
-
-*Message:* ${formData.message}`;
-
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    setIsSubmitting(true);
+    setBookingError("");
     
-    // Send email using FormSubmit AJAX
     try {
+      // 1. Upload receipt to Cloudinary
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'demo'}/image/upload`;
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", receiptFile);
+      formDataUpload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'unsigned_preset');
+
+      const cloudinaryRes = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: formDataUpload
+      });
+      
+      if (!cloudinaryRes.ok) {
+        throw new Error("Failed to upload receipt to Cloudinary");
+      }
+      
+      const cloudinaryData = await cloudinaryRes.json();
+      const downloadURL = cloudinaryData.secure_url;
+
+      // 2. Save booking to Firestore
+      const fullName = `${formData.firstName} ${formData.lastName}`;
+      await addDoc(collection(db, "consultations"), {
+        name: fullName,
+        email: formData.email,
+        phone: formData.phone,
+        service: selectedService,
+        date: selectedDate,
+        time: selectedTime,
+        message: formData.message,
+        receiptUrl: downloadURL,
+        status: "pending",
+        createdAt: serverTimestamp()
+      });
+
+      // 3. Send email to admin
       await fetch("https://formsubmit.co/ajax/apexgetaways.travel@gmail.com", {
         method: "POST",
         headers: { 
@@ -96,22 +116,26 @@ export default function ConsultationPage() {
             'Accept': 'application/json'
         },
         body: JSON.stringify({
-            _subject: "New Consultation Booking",
+            _subject: "New Consultation Payment Pending",
+            Status: "Requires Admin Confirmation",
             Service: selectedService,
             Date: selectedDate,
             Time: selectedTime,
-            Name: `${formData.firstName} ${formData.lastName}`,
+            Name: fullName,
             Email: formData.email,
             Phone: formData.phone,
             Message: formData.message
         })
       });
-    } catch(error) {
-       console.error("Failed to send email", error);
-    }
 
-    // Redirect to WhatsApp
-    window.open(whatsappUrl, '_blank');
+      // 4. Move to success step
+      setStep(5);
+    } catch(error) {
+       console.error("Failed to submit booking", error);
+       setBookingError("Failed to submit your booking. Please check your internet connection and try again.");
+    } finally {
+       setIsSubmitting(false);
+    }
   };
 
   return (
@@ -133,28 +157,29 @@ export default function ConsultationPage() {
       <section className="px-6 -mt-12 relative z-20">
         <div className="mx-auto max-w-4xl bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-12">
           
-          {/* Progress Bar */}
-          <div className="flex items-center justify-between mb-12 relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-100 -z-10 rounded-full">
-              <div 
-                className="h-full bg-brand-gold rounded-full transition-all duration-300"
-                style={{ width: `${((step - 1) / 2) * 100}%` }}
-              ></div>
-            </div>
-            
-            {[1, 2, 3].map((num) => (
-              <div 
-                key={num}
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${
-                  step >= num 
-                    ? "bg-brand-gold text-white border-4 border-white shadow-sm" 
-                    : "bg-gray-200 text-gray-500 border-4 border-white"
-                }`}
-              >
-                {step > num ? <CheckCircle2 size={16} /> : num}
+          {step < 5 && (
+            <div className="flex items-center justify-between mb-12 relative">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-100 -z-10 rounded-full">
+                <div 
+                  className="h-full bg-brand-gold rounded-full transition-all duration-300"
+                  style={{ width: `${((step - 1) / 3) * 100}%` }}
+                ></div>
               </div>
-            ))}
-          </div>
+              
+              {[1, 2, 3, 4].map((num) => (
+                <div 
+                  key={num}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${
+                    step >= num 
+                      ? "bg-brand-gold text-white border-4 border-white shadow-sm" 
+                      : "bg-gray-200 text-gray-500 border-4 border-white"
+                  }`}
+                >
+                  {step > num ? <CheckCircle2 size={16} /> : num}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Wizard Content */}
           <div className="min-h-[400px]">
@@ -198,7 +223,7 @@ export default function ConsultationPage() {
                         min={new Date().toISOString().split("T")[0]}
                         value={selectedDate}
                         onChange={handleDateChange}
-                        className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-gray-700"
+                        className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-gold text-gray-700"
                       />
                     </div>
                   </div>
@@ -242,19 +267,7 @@ export default function ConsultationPage() {
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <h2 className="text-2xl font-black text-brand-midnight mb-6">3. Your Details</h2>
                 
-                {/* Summary Card */}
-                <div className="bg-gray-50 rounded-2xl p-6 mb-8 border border-gray-100 flex flex-col sm:flex-row justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Service</p>
-                    <p className="font-bold text-brand-midnight">{selectedService}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date & Time</p>
-                    <p className="font-bold text-brand-midnight">{selectedDate} at {selectedTime}</p>
-                  </div>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="relative">
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
@@ -308,39 +321,131 @@ export default function ConsultationPage() {
                 </form>
               </div>
             )}
+
+            {/* Step 4: Payment Invoice & Receipt Upload */}
+            {step === 4 && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <h2 className="text-2xl font-black text-brand-midnight mb-6">4. Payment & Confirmation</h2>
+                
+                <div className="bg-amber-50 border border-brand-gold/30 rounded-2xl p-6 mb-8">
+                  <h3 className="font-bold text-brand-midnight text-lg mb-4">Invoice Details</h3>
+                  <p className="text-sm text-gray-700 mb-6 leading-relaxed">
+                    Please make a payment for your consultation to the account below. Your booking will remain pending until an administrator verifies your uploaded receipt.
+                  </p>
+                  
+                  <div className="bg-white p-5 rounded-xl border border-brand-gold/20 shadow-sm space-y-3">
+                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                      <span className="text-gray-500 text-sm">Account Number</span>
+                      <span className="font-black text-lg text-brand-midnight tracking-wider">8062841276</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                      <span className="text-gray-500 text-sm">Bank Name</span>
+                      <span className="font-bold text-brand-midnight">OPAY</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-500 text-sm">Account Name</span>
+                      <span className="font-bold text-brand-midnight uppercase">Joy Ojochenemi Christian</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-8">
+                  <label className="block font-bold text-brand-midnight mb-3">Upload Payment Receipt</label>
+                  <div className="relative border-2 border-dashed border-brand-gold/40 rounded-2xl p-8 text-center bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <input 
+                      type="file" 
+                      accept="image/*,.pdf" 
+                      required
+                      onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <div className="flex flex-col items-center gap-3">
+                      <UploadCloud className="text-brand-gold w-10 h-10" />
+                      <div>
+                        {receiptFile ? (
+                          <div className="flex items-center gap-2 text-brand-midnight font-bold">
+                            <FileImage size={18} />
+                            {receiptFile.name}
+                          </div>
+                        ) : (
+                          <>
+                            <span className="font-bold text-brand-midnight block">Click to upload or drag and drop</span>
+                            <span className="text-sm text-gray-500">SVG, PNG, JPG or PDF (max. 5MB)</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {bookingError && (
+                  <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100">
+                    {bookingError}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 5: Success */}
+            {step === 5 && (
+              <div className="animate-in zoom-in-95 duration-500 flex flex-col items-center justify-center py-12 text-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                  <CheckCircle2 className="w-10 h-10 text-green-600" />
+                </div>
+                <h2 className="text-3xl font-black text-brand-midnight mb-4">Booking Pending Verification</h2>
+                <p className="text-gray-600 max-w-md mx-auto leading-relaxed mb-8">
+                  Thank you! We have received your consultation booking and payment receipt. Our team will verify the payment and confirm your schedule shortly. You will receive an email update once confirmed.
+                </p>
+                <Link href="/" className="bg-brand-midnight text-white font-bold py-3 px-8 rounded-xl hover:bg-brand-ocean transition-colors">
+                  Return to Home
+                </Link>
+              </div>
+            )}
             
           </div>
 
           {/* Navigation */}
-          <div className="mt-8 pt-8 border-t border-gray-100 flex justify-between items-center">
-            {step > 1 ? (
-              <button 
-                onClick={handleBack}
-                className="text-gray-500 font-bold text-sm hover:text-brand-midnight transition-colors px-4 py-2"
-              >
-                Back
-              </button>
-            ) : (
-              <div></div>
-            )}
+          {step < 5 && (
+            <div className="mt-8 pt-8 border-t border-gray-100 flex justify-between items-center">
+              {step > 1 ? (
+                <button 
+                  onClick={handleBack}
+                  disabled={isSubmitting}
+                  className="text-gray-500 font-bold text-sm hover:text-brand-midnight transition-colors px-4 py-2 disabled:opacity-50"
+                >
+                  Back
+                </button>
+              ) : (
+                <div></div>
+              )}
 
-            {step < 3 ? (
-              <button 
-                onClick={handleNext}
-                disabled={(step === 1 && !selectedService) || (step === 2 && (!selectedDate || !selectedTime))}
-                className="bg-brand-midnight text-white font-bold py-3 px-8 rounded-xl hover:bg-brand-ocean transition-colors disabled:opacity-50 flex items-center gap-2"
-              >
-                Next Step <ArrowRight size={16} />
-              </button>
-            ) : (
-              <button 
-                onClick={handleSubmit}
-                className="bg-[#25D366] text-white font-bold py-3 px-10 rounded-xl hover:bg-[#1ebd5b] transition-colors flex items-center gap-2 shadow-sm"
-              >
-                Book Now <ArrowRight size={18} />
-              </button>
-            )}
-          </div>
+              {step < 4 ? (
+                <button 
+                  onClick={handleNext}
+                  disabled={(step === 1 && !selectedService) || (step === 2 && (!selectedDate || !selectedTime)) || (step === 3 && (!formData.firstName || !formData.lastName || !formData.email || !formData.phone))}
+                  className="bg-brand-midnight text-white font-bold py-3 px-8 rounded-xl hover:bg-brand-ocean transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm"
+                >
+                  {step === 3 ? "Continue to Payment" : "Next Step"} <ArrowRight size={16} />
+                </button>
+              ) : (
+                <button 
+                  onClick={handleSubmit}
+                  disabled={!receiptFile || isSubmitting}
+                  className="bg-brand-gold text-brand-midnight font-black py-3 px-8 rounded-xl hover:bg-[#d6a020] transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:bg-gray-200 disabled:text-gray-400"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="animate-spin" size={18} /> Processing...
+                    </>
+                  ) : (
+                    <>
+                      Submit Booking & Receipt <CheckCircle2 size={18} />
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          )}
 
         </div>
       </section>

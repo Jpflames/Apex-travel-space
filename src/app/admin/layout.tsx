@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, 
   CalendarCheck, 
@@ -13,8 +13,11 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  Loader2
 } from "lucide-react";
+import { auth } from "@/lib/firebase/client";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
 export default function AdminLayout({
   children,
@@ -22,7 +25,57 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+      
+      // If we are not on the login page and there is no user, redirect to login
+      if (!currentUser && pathname !== "/admin/login") {
+        router.push("/admin/login");
+      }
+      
+      // If we are on the login page and there is a user, redirect to admin dashboard
+      if (currentUser && pathname === "/admin/login") {
+        router.push("/admin");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [pathname, router]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      router.push("/admin/login");
+    } catch (error) {
+      console.error("Error signing out", error);
+    }
+  };
+
+  // While checking auth state, show a loader
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="animate-spin text-brand-ocean w-10 h-10" />
+      </div>
+    );
+  }
+
+  // If on the login page (and not authenticated due to the redirect logic above), just render the login page without the sidebar
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
+  // If not authenticated (but somehow bypassed the redirect, safety catch), return null to prevent flash of content
+  if (!user) {
+    return null;
+  }
 
   const navItems = [
     { name: "Overview", href: "/admin", icon: <LayoutDashboard size={20} /> },
@@ -77,7 +130,7 @@ export default function AdminLayout({
         </nav>
 
         <div className="p-4 border-t border-brand-steel/10">
-          <button className="flex items-center gap-3 px-4 py-3 rounded-xl transition-colors w-full text-brand-steel hover:bg-red-500/10 hover:text-red-400">
+          <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 rounded-xl transition-colors w-full text-brand-steel hover:bg-red-500/10 hover:text-red-400">
             <LogOut size={20} />
             Sign Out
           </button>
@@ -98,10 +151,10 @@ export default function AdminLayout({
           <div className="flex items-center gap-4 ml-auto">
             <div className="text-right hidden sm:block">
               <p className="text-sm font-bold text-brand-midnight">Admin User</p>
-              <p className="text-xs text-brand-muted">admin@apexgetaways.com</p>
+              <p className="text-xs text-brand-muted">{user.email}</p>
             </div>
-            <div className="w-10 h-10 bg-brand-deep rounded-full text-white flex items-center justify-center font-bold">
-              AU
+            <div className="w-10 h-10 bg-brand-deep rounded-full text-white flex items-center justify-center font-bold uppercase">
+              {user.email ? user.email.substring(0, 2) : "AU"}
             </div>
           </div>
         </header>

@@ -1,23 +1,60 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Search, Filter, MoreVertical, Eye, CheckCircle, XCircle } from "lucide-react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Search, Filter, CheckCircle, XCircle, FileImage, Loader2 } from "lucide-react";
+import { db } from "@/lib/firebase/client";
+import { collection, onSnapshot, doc, updateDoc, query, orderBy } from "firebase/firestore";
 
-const mockConsultations = [
-  { id: "C-1045", name: "Sarah Johnson", email: "sarah.j@example.com", phone: "+1234567890", service: "Study Abroad", date: "Aug 28, 2026", time: "10:00 AM", status: "pending" },
-  { id: "C-1044", name: "Michael Chen", email: "m.chen@example.com", phone: "+0987654321", service: "Visa Assistance", date: "Aug 28, 2026", time: "11:30 AM", status: "confirmed" },
-  { id: "C-1043", name: "Aisha Patel", email: "a.patel@example.com", phone: "+1122334455", service: "IELTS Support", date: "Aug 29, 2026", time: "09:00 AM", status: "pending" },
-  { id: "C-1042", name: "David Kim", email: "dkim@example.com", phone: "+5544332211", service: "General Consultation", date: "Aug 27, 2026", time: "14:00 PM", status: "completed" },
-  { id: "C-1041", name: "Emma Watson", email: "emma.w@example.com", phone: "+9988776655", service: "Family Consultation", date: "Aug 26, 2026", time: "10:00 AM", status: "cancelled" },
-];
+interface Consultation {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  date: string;
+  time: string;
+  status: string;
+  receiptUrl?: string;
+  createdAt?: any;
+}
 
 export default function AdminConsultationsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [consultations, setConsultations] = useState<Consultation[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredConsultations = mockConsultations.filter(c => {
+  useEffect(() => {
+    // Listen to real-time updates from Firestore
+    const q = query(collection(db, "consultations"), orderBy("createdAt", "desc"));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Consultation[];
+      
+      setConsultations(docs);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching consultations:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleUpdateStatus = async (id: string, newStatus: string) => {
+    try {
+      const docRef = doc(db, "consultations", id);
+      await updateDoc(docRef, { status: newStatus });
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status. Make sure Firebase is properly configured.");
+    }
+  };
+
+  const filteredConsultations = consultations.filter(c => {
     const matchesSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           c.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           c.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -31,9 +68,6 @@ export default function AdminConsultationsPage() {
         <div>
           <h1 className="text-3xl font-bold text-brand-midnight">Consultations</h1>
           <p className="text-brand-muted">Manage and track all booking requests.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button className="bg-brand-ocean hover:bg-brand-ocean/90 text-white">Export CSV</Button>
         </div>
       </div>
 
@@ -68,68 +102,83 @@ export default function AdminConsultationsPage() {
 
         {/* Table */}
         <div className="flex-1 overflow-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-white sticky top-0 shadow-sm z-10">
-              <tr className="text-brand-muted text-xs uppercase tracking-wider border-b border-brand-steel/10">
-                <th className="p-4 font-semibold w-24">ID</th>
-                <th className="p-4 font-semibold">Client Details</th>
-                <th className="p-4 font-semibold">Service</th>
-                <th className="p-4 font-semibold">Schedule</th>
-                <th className="p-4 font-semibold text-center">Status</th>
-                <th className="p-4 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-brand-steel/10 text-brand-midnight text-sm">
-              {filteredConsultations.map((c) => (
-                <tr key={c.id} className="hover:bg-brand-soft/30 transition-colors group">
-                  <td className="p-4 font-mono font-medium text-brand-ocean">{c.id}</td>
-                  <td className="p-4">
-                    <div className="font-bold">{c.name}</div>
-                    <div className="text-brand-muted text-xs mt-1">{c.email} • {c.phone}</div>
-                  </td>
-                  <td className="p-4 font-medium">{c.service}</td>
-                  <td className="p-4 text-brand-muted">
-                    <span className="font-medium text-brand-midnight">{c.date}</span><br/>
-                    <span className="text-xs">{c.time} (WAT)</span>
-                  </td>
-                  <td className="p-4 text-center">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${
-                      c.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                      c.status === 'confirmed' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                      c.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' :
-                      'bg-red-50 text-red-700 border-red-200'
-                    }`}>
-                      {c.status}
-                    </span>
-                  </td>
-                  <td className="p-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {c.status === 'pending' && (
-                        <button className="p-1.5 text-green-600 hover:bg-green-50 rounded" title="Confirm">
-                          <CheckCircle size={18} />
-                        </button>
-                      )}
-                      {(c.status === 'pending' || c.status === 'confirmed') && (
-                        <button className="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Cancel">
-                          <XCircle size={18} />
-                        </button>
-                      )}
-                      <Link href={`/admin/consultations/${c.id}`} className="p-1.5 text-brand-ocean hover:bg-brand-ocean/10 rounded" title="View Details">
-                        <Eye size={18} />
-                      </Link>
-                    </div>
-                  </td>
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="animate-spin text-brand-ocean w-10 h-10" />
+            </div>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-white sticky top-0 shadow-sm z-10">
+                <tr className="text-brand-muted text-xs uppercase tracking-wider border-b border-brand-steel/10">
+                  <th className="p-4 font-semibold">Client Details</th>
+                  <th className="p-4 font-semibold">Service</th>
+                  <th className="p-4 font-semibold">Schedule</th>
+                  <th className="p-4 font-semibold">Receipt</th>
+                  <th className="p-4 font-semibold text-center">Status</th>
+                  <th className="p-4 font-semibold text-right">Actions</th>
                 </tr>
-              ))}
-              {filteredConsultations.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="p-12 text-center text-brand-muted">
-                    No consultations found matching your criteria.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-brand-steel/10 text-brand-midnight text-sm">
+                {filteredConsultations.map((c) => (
+                  <tr key={c.id} className="hover:bg-brand-soft/30 transition-colors group">
+                    <td className="p-4">
+                      <div className="font-bold">{c.name}</div>
+                      <div className="text-brand-muted text-xs mt-1">{c.email} • {c.phone}</div>
+                    </td>
+                    <td className="p-4 font-medium">{c.service}</td>
+                    <td className="p-4 text-brand-muted">
+                      <span className="font-medium text-brand-midnight">{c.date}</span><br/>
+                      <span className="text-xs">{c.time} (WAT)</span>
+                    </td>
+                    <td className="p-4">
+                      {c.receiptUrl ? (
+                        <a href={c.receiptUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-brand-ocean hover:underline bg-brand-ocean/10 py-1 px-2 rounded">
+                          <FileImage size={14} /> View
+                        </a>
+                      ) : (
+                        <span className="text-xs text-gray-400">No receipt</span>
+                      )}
+                    </td>
+                    <td className="p-4 text-center">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${
+                        c.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                        c.status === 'confirmed' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                        c.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' :
+                        'bg-red-50 text-red-700 border-red-200'
+                      }`}>
+                        {c.status}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {c.status === 'pending' && (
+                          <button 
+                            onClick={() => handleUpdateStatus(c.id, 'confirmed')}
+                            className="p-1.5 text-green-600 hover:bg-green-50 rounded" title="Confirm Payment">
+                            <CheckCircle size={18} />
+                          </button>
+                        )}
+                        {(c.status === 'pending' || c.status === 'confirmed') && (
+                          <button 
+                            onClick={() => handleUpdateStatus(c.id, 'cancelled')}
+                            className="p-1.5 text-red-600 hover:bg-red-50 rounded" title="Cancel/Reject">
+                            <XCircle size={18} />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filteredConsultations.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="p-12 text-center text-brand-muted">
+                      No consultations found matching your criteria.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
