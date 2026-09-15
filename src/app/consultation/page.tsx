@@ -340,6 +340,10 @@ export default function ConsultationPage() {
                   
                   <div className="bg-white p-5 rounded-xl border border-brand-gold/20 shadow-sm space-y-3">
                     <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                      <span className="text-gray-500 text-sm">Amount to Pay</span>
+                      <span className="font-black text-lg text-brand-gold tracking-wider">₦10,000</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-gray-100 pb-3">
                       <span className="text-gray-500 text-sm">Account Number</span>
                       <span className="font-black text-lg text-brand-midnight tracking-wider">8062841276</span>
                     </div>
