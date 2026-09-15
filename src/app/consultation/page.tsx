@@ -43,6 +43,7 @@ export default function ConsultationPage() {
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingError, setBookingError] = useState("");
+  const [waUrl, setWaUrl] = useState("");
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
@@ -128,10 +129,10 @@ export default function ConsultationPage() {
         })
       });
 
-      // 4. Open WhatsApp with prefilled message
+      // 4. Setup WhatsApp message and move to success step
       const waMessage = `Hello Apex Getaways, I just booked a consultation.\n\n*Name:* ${fullName}\n*Service:* ${selectedService}\n*Date:* ${selectedDate}\n*Time:* ${selectedTime}\n*Email:* ${formData.email}\n*Phone:* ${formData.phone}\n\nI have uploaded my payment receipt on the website for confirmation.`;
-      const waUrl = `https://wa.me/2349072855744?text=${encodeURIComponent(waMessage)}`;
-      window.open(waUrl, "_blank");
+      const generatedWaUrl = `https://wa.me/2349072855744?text=${encodeURIComponent(waMessage)}`;
+      setWaUrl(generatedWaUrl);
 
       // 5. Move to success step
       setStep(5);
@@ -402,12 +403,23 @@ export default function ConsultationPage() {
                   <CheckCircle2 className="w-10 h-10 text-green-600" />
                 </div>
                 <h2 className="text-3xl font-black text-brand-midnight mb-4">Booking Pending Verification</h2>
-                <p className="text-gray-600 max-w-md mx-auto leading-relaxed mb-8">
-                  Thank you! We have received your consultation booking and payment receipt. Our team will verify the payment and confirm your schedule shortly. You will receive an email update once confirmed.
+                <p className="text-gray-600 max-w-md mx-auto leading-relaxed mb-6">
+                  Thank you! We have received your consultation booking and payment receipt. 
+                  <strong className="block mt-2 text-brand-midnight">Please click the button below to send your booking information to our WhatsApp to finalize.</strong>
                 </p>
-                <Link href="/" className="bg-brand-midnight text-white font-bold py-3 px-8 rounded-xl hover:bg-brand-ocean transition-colors">
-                  Return to Home
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a 
+                    href={waUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-[#25D366] text-white font-bold py-3 px-8 rounded-xl hover:bg-[#20b858] transition-colors flex items-center justify-center gap-2 shadow-md"
+                  >
+                    Send Details to WhatsApp
+                  </a>
+                  <Link href="/" className="bg-gray-100 text-brand-midnight font-bold py-3 px-8 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center">
+                    Return to Home
+                  </Link>
+                </div>
               </div>
             )}
             
