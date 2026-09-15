@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa";
 
 export function Footer() {
   return (
@@ -21,12 +22,13 @@ export function Footer() {
         </div>
         <div className="flex items-center gap-3">
           {[
-            { label: "fb", href: "https://www.facebook.com/share/1EujeCDKCj/?mibextid=wwXIfr" },
-            { label: "ig", href: "https://www.instagram.com/apex_getaways_travel_ltd?igsi=MTd1Y3o0OGxqZGl4aA==" },
-            { label: "tt", href: "https://www.tiktok.com/@visa_travel_support?_r=1&_t=ZS-99QYQgeJCqb" }
-          ].map((item) => (
-            <a key={item.label} href={item.href} target="_blank" rel="noopener noreferrer" className="grid h-7 w-7 place-items-center rounded-full bg-[#0c3973] text-[0.65rem] font-black uppercase text-white hover:bg-[#e6ac24] hover:text-[#061733]">
-              {item.label}
+            { icon: <FaFacebookF size={12} />, href: "https://www.facebook.com/share/1EujeCDKCj/?mibextid=wwXIfr" },
+            { icon: <FaInstagram size={12} />, href: "https://www.instagram.com/apex_getaways_travel_ltd?igsi=MTd1Y3o0OGxqZGl4aA==" },
+            { icon: <FaTiktok size={12} />, href: "https://www.tiktok.com/@visa_travel_support?_r=1&_t=ZS-99QYQgeJCqb" },
+            { icon: <FaWhatsapp size={14} />, href: "https://wa.me/2349072855744" }
+          ].map((item, index) => (
+            <a key={index} href={item.href} target="_blank" rel="noopener noreferrer" className="grid h-7 w-7 place-items-center rounded-full bg-[#0c3973] text-white hover:bg-[#e6ac24] hover:text-[#061733] transition-colors">
+              {item.icon}
             </a>
           ))}
         </div>

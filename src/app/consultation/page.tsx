@@ -116,7 +116,7 @@ export default function ConsultationPage() {
             'Accept': 'application/json'
         },
         body: JSON.stringify({
-            _subject: "New Consultation Payment Pending",
+            _subject: "New Consultation Booked",
             Status: "Requires Admin Confirmation",
             Service: selectedService,
             Date: selectedDate,
@@ -128,7 +128,12 @@ export default function ConsultationPage() {
         })
       });
 
-      // 4. Move to success step
+      // 4. Open WhatsApp with prefilled message
+      const waMessage = `Hello Apex Getaways, I just booked a consultation.\n\n*Name:* ${fullName}\n*Service:* ${selectedService}\n*Date:* ${selectedDate}\n*Time:* ${selectedTime}\n*Email:* ${formData.email}\n*Phone:* ${formData.phone}\n\nI have uploaded my payment receipt on the website for confirmation.`;
+      const waUrl = `https://wa.me/2349072855744?text=${encodeURIComponent(waMessage)}`;
+      window.open(waUrl, "_blank");
+
+      // 5. Move to success step
       setStep(5);
     } catch(error) {
        console.error("Failed to submit booking", error);
@@ -439,7 +444,7 @@ export default function ConsultationPage() {
                     </>
                   ) : (
                     <>
-                      Submit Booking & Receipt <CheckCircle2 size={18} />
+                      Submit Booking & Notify <CheckCircle2 size={18} />
                     </>
                   )}
                 </button>

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone, MessageCircle } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { GoldButton } from "@/components/apex/ApexComponents";
 
 export const metadata = {
@@ -90,9 +91,9 @@ export default function ContactPage() {
               </div>
 
               <div className="bg-brand-ocean text-white p-6 rounded-2xl">
-                <h4 className="font-bold mb-2 flex items-center gap-2"><MessageCircle size={18} /> WhatsApp Chat</h4>
+                <h4 className="font-bold mb-2 flex items-center gap-2"><FaWhatsapp size={18} /> WhatsApp Chat</h4>
                 <p className="text-white/80 text-xs mb-4">Need immediate assistance? Chat with our experts on WhatsApp.</p>
-                <Link href="#" className="bg-white text-brand-ocean text-xs font-bold py-2 px-4 rounded-lg inline-block hover:bg-gray-50 transition-colors">
+                <Link href="https://wa.me/2349072855744" target="_blank" className="bg-white text-brand-ocean text-xs font-bold py-2 px-4 rounded-lg inline-block hover:bg-gray-50 transition-colors">
                   Start Chat
                 </Link>
               </div>

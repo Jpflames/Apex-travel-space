@@ -3,7 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Home, MessageCircle, Calendar, Clock } from "lucide-react";
+import { CheckCircle2, Home, Calendar, Clock } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Suspense } from "react";
 
 function SuccessContent() {
@@ -75,8 +76,8 @@ function SuccessContent() {
           </Link>
         </Button>
         <Button size="lg" variant="outline" asChild className="border-green-500 text-green-700 hover:bg-green-50 hover:text-green-800">
-          <Link href="#">
-            <MessageCircle size={18} className="mr-2" /> Chat on WhatsApp
+          <Link href="https://wa.me/2349072855744" target="_blank">
+            <FaWhatsapp size={18} className="mr-2" /> Chat on WhatsApp
           </Link>
         </Button>
       </div>
